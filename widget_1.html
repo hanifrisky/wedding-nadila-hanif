@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RSVP - The Wedding of Nadila & Hanif</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Canva Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: transparent;
+      color: #1a202c;
+      padding: 10px 4px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100%;
+    }
+    .form-container {
+      width: 100%;
+      max-width: 320px;
+      background: #dceaf8;
+      border-radius: 14px;
+      padding: 18px 16px;
+      box-shadow: 0 4px 15px rgba(10, 89, 128, 0.08);
+      position: relative;
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    label {
+      display: block;
+      font-size: 15px;
+      font-weight: 700;
+      color: #182642;
+      margin-bottom: 6px;
+      letter-spacing: -0.2px;
+    }
+    .required {
+      color: #e53e3e;
+      margin-left: 2px;
+    }
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      background: #ffffff;
+      border: 1.5px solid #c2dbf3;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: #2d3748;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    input[type="text"]:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #0a5980;
+      box-shadow: 0 0 0 3px rgba(10, 89, 128, 0.15);
+    }
+    textarea {
+      resize: none;
+      height: 72px;
+    }
+    /* Custom Radio Buttons */
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .radio-option {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      border: 1.5px solid #c2dbf3;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .radio-option:hover {
+      border-color: #0a5980;
+      background: #f8fbff;
+    }
+    .radio-option input[type="radio"] {
+      margin-right: 10px;
+      accent-color: #0a5980;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+    .radio-option.selected {
+      border-color: #0a5980;
+      background: #f0f7ff;
+      font-weight: 600;
+      color: #0a5980;
+    }
+    .radio-label {
+      font-size: 13.5px;
+      cursor: pointer;
+    }
+    /* Submit Button */
+    .submit-btn {
+      width: 100%;
+      background: #0a5980;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(10, 89, 128, 0.25);
+      transition: all 0.2s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .submit-btn:hover {
+      background: #084766;
+      box-shadow: 0 6px 14px rgba(10, 89, 128, 0.35);
+      transform: translateY(-1px);
+    }
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+    .submit-btn:disabled {
+      background: #88b3ca;
+      cursor: not-allowed;
+      transform: none;
+    }
+    /* Alert Messages */
+    .alert {
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 12px;
+      display: none;
+      animation: fadeIn 0.3s ease;
+      line-height: 1.4;
+    }
+    .alert-success {
+      background: #e6fffa;
+      border: 1px solid #38b2ac;
+      color: #234e52;
+    }
+    .alert-error {
+      background: #fff5f5;
+      border: 1px solid #e53e3e;
+      color: #742a2a;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <div id="alertSuccess" class="alert alert-success">
+      ✓ <strong>Terima kasih!</strong> Konfirmasi kehadiran dan doa restu Anda telah berhasil dikirim.
+    </div>
+    <div id="alertError" class="alert alert-error"></div>
+
+    <form id="rsvpForm">
+      <!-- Input Nama -->
+      <div class="form-group">
+        <label for="nama">Nama kamu<span class="required">*</span></label>
+        <input type="text" id="nama" name="nama" placeholder="Tuliskan nama lengkap Anda" required autocomplete="name">
+      </div>
+
+      <!-- Konfirmasi Kehadiran -->
+      <div class="form-group">
+        <label>Kamu akan hadir?<span class="required">*</span></label>
+        <div class="radio-group">
+          <label class="radio-option selected" id="optHadir">
+            <input type="radio" name="kehadiran" value="Ya, saya akan hadir" checked>
+            <span class="radio-label">Ya, saya akan hadir</span>
+          </label>
+          <label class="radio-option" id="optTidakHadir">
+            <input type="radio" name="kehadiran" value="Tidak bisa Hadir">
+            <span class="radio-label">Tidak bisa Hadir</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Pesan / Doa -->
+      <div class="form-group">
+        <label for="doa">Pesan anda<span class="required">*</span></label>
+        <textarea id="doa" name="doa" placeholder="Tuliskan doa restu & ucapan Anda untuk kedua mempelai..." required></textarea>
+      </div>
+
+      <!-- Tombol Kirim -->
+      <button type="submit" id="submitBtn" class="submit-btn">
+        <span id="btnText">Kirim</span>
+      </button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('rsvpForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const alertSuccess = document.getElementById('alertSuccess');
+    const alertError = document.getElementById('alertError');
+    const optHadir = document.getElementById('optHadir');
+    const optTidakHadir = document.getElementById('optTidakHadir');
+
+    // Radio style toggle
+    const radioInputs = document.querySelectorAll('input[name="kehadiran"]');
+    radioInputs.forEach(input => {
+      input.addEventListener('change', () => {
+        if (input.value === 'Ya, saya akan hadir') {
+          optHadir.classList.add('selected');
+          optTidakHadir.classList.remove('selected');
+        } else {
+          optTidakHadir.classList.add('selected');
+          optHadir.classList.remove('selected');
+        }
+      });
+    });
+
+    // Handle form submit
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      alertSuccess.style.display = 'none';
+      alertError.style.display = 'none';
+
+      const nama = document.getElementById('nama').value.trim();
+      const kehadiran = document.querySelector('input[name="kehadiran"]:checked')?.value || 'Ya, saya akan hadir';
+      const doa = document.getElementById('doa').value.trim();
+
+      if (!nama) {
+        alertError.textContent = 'Mohon isi nama Anda.';
+        alertError.style.display = 'block';
+        return;
+      }
+      if (!doa) {
+        alertError.textContent = 'Mohon tuliskan pesan doa atau ucapan Anda.';
+        alertError.style.display = 'block';
+        return;
+      }
+
+      // Loading state
+      submitBtn.disabled = true;
+      btnText.innerHTML = '<div class="spinner"></div> Mengirim...';
+
+      try {
+        const response = await fetch('/api/rsvp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ nama, kehadiran, doa })
+        });
+
+        const resData = await response.json();
+
+        if (response.ok && resData.success) {
+          alertSuccess.style.display = 'block';
+          form.reset();
+          optHadir.classList.add('selected');
+          optTidakHadir.classList.remove('selected');
+
+          // Notify parent window to update Section Daftar Doa immediately
+          try {
+            window.parent.postMessage({ type: 'RSVP_SUBMITTED', data: resData.data }, '*');
+          } catch (err) {}
+        } else {
+          alertError.textContent = resData.message || 'Terjadi kesalahan saat menyimpan data.';
+          alertError.style.display = 'block';
+        }
+      } catch (err) {
+        alertError.textContent = 'Gagal menghubungi server. Mohon periksa koneksi Anda.';
+        alertError.style.display = 'block';
+      } finally {
+        submitBtn.disabled = false;
+        btnText.textContent = 'Kirim';
+      }
+    });
+  </script>
+</body>
+</html>

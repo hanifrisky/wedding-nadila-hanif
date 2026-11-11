@@ -1,0 +1,466 @@
+<!-- ======================================================== -->
+<!-- SECTION DAFTAR DOA & UCAPAN (CUSTOM LOCAL RSVP COMPONENT) -->
+<!-- ======================================================== -->
+<style id="custom-doa-section-style">
+  .custom-doa-section {
+    width: 100%;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    padding: 40px 16px 60px 16px;
+    font-family: -apple-system, BlinkMacSystemFont, "Canva Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1a202c;
+    position: relative;
+    z-index: 10;
+  }
+  .doa-container {
+    max-width: 640px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 32px 24px;
+    border: 1px solid #e2edf8;
+    box-shadow: 0 10px 30px rgba(10, 89, 128, 0.05);
+  }
+  @media (max-width: 480px) {
+    .doa-container {
+      padding: 24px 16px;
+      border-radius: 16px;
+    }
+  }
+  .doa-header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .doa-header-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 46px;
+    height: 46px;
+    background: #eef6fd;
+    border-radius: 50%;
+    color: #0a5980;
+    margin-bottom: 12px;
+  }
+  .doa-title {
+    font-family: "The Seasons", "Libra Serif Modern", Georgia, serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #182642;
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+  }
+  .doa-subtitle {
+    font-size: 13.5px;
+    color: #64748b;
+    line-height: 1.5;
+  }
+  /* Stats pills */
+  .doa-stats {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .stat-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+  .stat-total {
+    background: #f1f5f9;
+    color: #334155;
+  }
+  .stat-hadir {
+    background: #e6fffa;
+    color: #0f766e;
+    border: 1px solid #b2f5ea;
+  }
+  .stat-tidak-hadir {
+    background: #f8fafc;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+  }
+  /* Card item */
+  .doa-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 200px;
+  }
+  .doa-card {
+    background: #fcfdff;
+    border: 1px solid #e2edf8;
+    border-radius: 12px;
+    padding: 16px;
+    transition: all 0.2s ease;
+  }
+  .doa-card:hover {
+    border-color: #b9d9f5;
+    box-shadow: 0 4px 12px rgba(10, 89, 128, 0.05);
+  }
+  .doa-card-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .doa-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0a5980 0%, #2079a8 100%);
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 15px;
+    flex-shrink: 0;
+    text-transform: uppercase;
+  }
+  .doa-meta {
+    flex-grow: 1;
+    min-width: 0;
+  }
+  .doa-name {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .doa-time {
+    font-size: 11.5px;
+    color: #94a3b8;
+    margin-top: 1px;
+  }
+  .badge-status {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge-hadir {
+    background: #d1fae5;
+    color: #065f46;
+  }
+  .badge-tidak-hadir {
+    background: #f1f5f9;
+    color: #475569;
+  }
+  .doa-message {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: #334155;
+    background: #ffffff;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border-left: 3px solid #0a5980;
+    word-break: break-word;
+  }
+  /* Empty state */
+  .doa-empty {
+    text-align: center;
+    padding: 36px 16px;
+    color: #94a3b8;
+    font-size: 14px;
+  }
+  /* Pagination */
+  .doa-pagination-container {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #edf2f7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .doa-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .page-btn {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #0a5980;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+  }
+  .page-btn:hover:not(:disabled) {
+    background: #eef6fd;
+    border-color: #0a5980;
+  }
+  .page-btn.active {
+    background: #0a5980;
+    border-color: #0a5980;
+    color: #ffffff;
+  }
+  .page-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .page-info {
+    font-size: 12px;
+    color: #64748b;
+  }
+  .spinner-doa {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: 3px solid #e2edf8;
+    border-top-color: #0a5980;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 20px auto;
+  }
+</style>
+
+<template id="section-daftar-doa-template">
+  <section class="rGeu6w custom-doa-section" id="section-daftar-doa">
+    <div class="doa-container">
+      <!-- Header -->
+      <div class="doa-header">
+        <div class="doa-header-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </div>
+        <h2 class="doa-title">Ucapan &amp; Doa Restu</h2>
+        <p class="doa-subtitle">Untaian doa dan harapan terbaik dari keluarga, sahabat, dan kerabat tercinta.</p>
+      </div>
+
+      <!-- Stats Summary -->
+      <div class="doa-stats">
+        <span class="stat-pill stat-total" id="statTotal">Total: 0 Ucapan</span>
+        <span class="stat-pill stat-hadir" id="statHadir">✓ 0 Hadir</span>
+        <span class="stat-pill stat-tidak-hadir" id="statTidakHadir">✕ 0 Berhalangan</span>
+      </div>
+
+      <!-- Cards Container -->
+      <div class="doa-list" id="doaCardsList">
+        <div style="text-align:center; padding: 20px;"><div class="spinner-doa"></div></div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="doa-pagination-container" id="paginationContainer" style="display:none;">
+        <div class="doa-pagination" id="paginationButtons"></div>
+        <div class="page-info" id="paginationInfo"></div>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script>
+(function() {
+  // ========================================================
+  // KONFIGURASI PAGINASI
+  // ========================================================
+  // Anda dapat mengubah angka di bawah ini untuk mengatur jumlah ucapan per halaman:
+  const ITEMS_PER_PAGE = 10;
+  // ========================================================
+
+  let currentPage = 1;
+  let allDoaData = [];
+
+  function getInitials(name) {
+    if (!name) return 'U';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>"']/g, function(m) {
+      return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'}[m];
+    });
+  }
+
+  function renderPage(page) {
+    currentPage = page;
+    const listEl = document.getElementById('doaCardsList');
+    const pagContainer = document.getElementById('paginationContainer');
+    const pagButtons = document.getElementById('paginationButtons');
+    const pagInfo = document.getElementById('paginationInfo');
+    if (!listEl) return;
+
+    if (!allDoaData || allDoaData.length === 0) {
+      listEl.innerHTML = '<div class="doa-empty">Belum ada ucapan doa. Jadilah yang pertama mengirimkan doa restu!</div>';
+      if (pagContainer) pagContainer.style.display = 'none';
+      return;
+    }
+
+    const totalItems = allDoaData.length;
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE) || 1;
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalItems);
+    const currentItems = allDoaData.slice(startIndex, endIndex);
+
+    // Render Cards
+    listEl.innerHTML = currentItems.map(item => {
+      const isHadir = (item.kehadiran === 'hadir' || item.kehadiran === 'Ya, saya akan hadir');
+      const badgeClass = isHadir ? 'badge-hadir' : 'badge-tidak-hadir';
+      const badgeText = isHadir ? '✓ Hadir' : '✕ Tidak Hadir';
+      const initials = getInitials(item.nama);
+
+      return `
+        <div class="doa-card">
+          <div class="doa-card-top">
+            <div class="doa-avatar">${escapeHtml(initials)}</div>
+            <div class="doa-meta">
+              <div class="doa-name">${escapeHtml(item.nama)}</div>
+              <div class="doa-time">${escapeHtml(item.waktu || '')}</div>
+            </div>
+            <span class="badge-status ${badgeClass}">${badgeText}</span>
+          </div>
+          <div class="doa-message">${escapeHtml(item.doa || '')}</div>
+        </div>
+      `;
+    }).join('');
+
+    // Render Pagination Controls
+    if (pagContainer && pagButtons && pagInfo) {
+      pagContainer.style.display = 'flex';
+      pagInfo.textContent = `Menampilkan ${startIndex + 1} - ${endIndex} dari ${totalItems} ucapan`;
+
+      let btnsHtml = '';
+      // Prev button
+      btnsHtml += `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="window.goToRsvpPage(${currentPage - 1})">&lt; Prev</button>`;
+
+      for (let p = 1; p <= totalPages; p++) {
+        // Show all if <= 7 pages, or smart truncation
+        if (totalPages <= 7 || p === 1 || p === totalPages || (p >= currentPage - 1 && p <= currentPage + 1)) {
+          btnsHtml += `<button class="page-btn ${p === currentPage ? 'active' : ''}" onclick="window.goToRsvpPage(${p})">${p}</button>`;
+        } else if (p === currentPage - 2 || p === currentPage + 2) {
+          btnsHtml += `<span style="padding: 0 4px; color: #94a3b8;">...</span>`;
+        }
+      }
+
+      // Next button
+      btnsHtml += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="window.goToRsvpPage(${currentPage + 1})">Next &gt;</button>`;
+      pagButtons.innerHTML = btnsHtml;
+    }
+  }
+
+  window.goToRsvpPage = function(p) {
+    renderPage(p);
+    const sec = document.getElementById('section-daftar-doa');
+    if (sec) {
+      sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  async function fetchRsvpData(silent = false) {
+    try {
+      const resp = await fetch('/api/rsvp?t=' + Date.now());
+      if (!resp.ok) throw new Error('Network error');
+      const json = await resp.json();
+      allDoaData = json.data || [];
+
+      // Update counters
+      const statTotal = document.getElementById('statTotal');
+      const statHadir = document.getElementById('statHadir');
+      const statTidakHadir = document.getElementById('statTidakHadir');
+      if (statTotal) statTotal.textContent = `Total: ${json.total || 0} Ucapan`;
+      if (statHadir) statHadir.textContent = `✓ ${json.hadir || 0} Hadir`;
+      if (statTidakHadir) statTidakHadir.textContent = `✕ ${json.tidak_hadir || 0} Berhalangan`;
+
+      renderPage(currentPage);
+    } catch (e) {
+      console.warn('Gagal memuat RSVP data:', e);
+      const listEl = document.getElementById('doaCardsList');
+      if (listEl && !silent) {
+        listEl.innerHTML = '<div class="doa-empty">Belum dapat memuat ucapan. Silakan segarkan halaman.</div>';
+      }
+    }
+  }
+
+  function insertDoaSection() {
+    if (document.getElementById('section-daftar-doa')) return;
+
+    // Find Canva slide 6 (which contains the RSVP form widget)
+    const allSections = document.querySelectorAll('section.rGeu6w');
+    let targetSection = null;
+
+    if (allSections && allSections.length >= 7) {
+      // Slide 6 is index 6
+      targetSection = allSections[6];
+    } else {
+      // Fallback: look for section containing the iframe
+      const ifr = document.querySelector('iframe[src*="website-element-widget"]');
+      if (ifr) {
+        targetSection = ifr.closest('section.rGeu6w') || ifr.closest('section');
+      }
+    }
+
+    if (!targetSection) {
+      // Retry in 250ms
+      setTimeout(insertDoaSection, 250);
+      return;
+    }
+
+    const template = document.getElementById('section-daftar-doa-template');
+    if (!template) return;
+
+    const clone = template.content.cloneNode(true);
+    targetSection.parentNode.insertBefore(clone, targetSection.nextSibling);
+
+    // Initial fetch data
+    fetchRsvpData();
+  }
+
+  // Listen for form submissions from widget iframe
+  window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'RSVP_SUBMITTED') {
+      currentPage = 1; // reset to first page to see the new wish
+      fetchRsvpData(true);
+      // Smooth scroll to Daftar Doa
+      setTimeout(() => {
+        const sec = document.getElementById('section-daftar-doa');
+        if (sec) {
+          sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 500);
+    }
+  });
+
+  // Init when DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', insertDoaSection);
+  } else {
+    insertDoaSection();
+  }
+
+  // Also observe DOM in case Canva re-renders or mounts late
+  const observer = new MutationObserver(() => {
+    if (!document.getElementById('section-daftar-doa')) {
+      insertDoaSection();
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+})();
+</script>
