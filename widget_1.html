@@ -288,6 +288,11 @@
         const resData = await response.json();
 
         if (response.ok && resData.success) {
+          if (resData.reset) {
+            alertSuccess.innerHTML = '✓ <strong>Reset Berhasil!</strong> Seluruh data RSVP telah berhasil dihapus.';
+          } else {
+            alertSuccess.innerHTML = '✓ <strong>Terima kasih!</strong> Konfirmasi kehadiran dan doa restu Anda telah berhasil dikirim.';
+          }
           alertSuccess.style.display = 'block';
           form.reset();
           optHadir.classList.add('selected');
@@ -295,7 +300,7 @@
 
           // Notify parent window to update Section Daftar Doa immediately
           try {
-            window.parent.postMessage({ type: 'RSVP_SUBMITTED', data: resData.data }, '*');
+            window.parent.postMessage({ type: 'RSVP_SUBMITTED', data: resData.data || null, reset: !!resData.reset }, '*');
           } catch (err) {}
         } else {
           alertError.textContent = resData.message || 'Terjadi kesalahan saat menyimpan data.';

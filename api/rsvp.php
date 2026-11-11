@@ -35,6 +35,17 @@ if ($method === 'POST') {
         exit;
     }
 
+    // Fitur Reset Data RSVP oleh Admin
+    if (strcasecmp($nama, 'Admin') === 0 && $doa === '@reset-data-rsvp') {
+        file_put_contents($dataPath, json_encode([], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        echo json_encode([
+            'success' => true,
+            'reset' => true,
+            'message' => 'Seluruh data RSVP telah berhasil dihapus (reset).'
+        ]);
+        exit;
+    }
+
     if (!in_array($kehadiran, ['hadir', 'tidak_hadir', 'Ya, saya akan hadir', 'Tidak bisa Hadir'], true)) {
         $kehadiran = 'hadir';
     }
