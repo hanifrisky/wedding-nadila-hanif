@@ -267,7 +267,7 @@
       btnText.innerHTML = '<div class="spinner"></div> Mengirim...';
 
       try {
-        const response = await fetch('/api/rsvp', {
+        const response = await fetch('api/rsvp.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
