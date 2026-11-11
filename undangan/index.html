@@ -1,4 +1,4 @@
-<!DOCTYPE html><html dir="ltr" lang="en" class="x-default-marker theme light classic x6brqfx x1yowkxt x19aimcq"><head><base href="/"><meta charset="utf-8"><title>The Wedding of Nadila and Hanif</title><meta name="app-name" content="export_website"/><meta name="build-version" content="284b2b1a8de29498f78656d5e478468b146ce465"/><meta name="build-release-name" content="20261109-22-284b2b1"/><meta name="build-deployment-group" content="STABLE"/><meta name="viewport" content="width=device-width, initial-scale=1"><script nonce="a21d8feb-b1a3-4aa5-af02-c612b985c31f">(function pushPageBuildIdentityToNativeShell(identity) {
+<!DOCTYPE html><html dir="ltr" lang="en" class="x-default-marker theme light classic x6brqfx x1yowkxt x19aimcq"><head><base href="/"><meta charset="utf-8"><script nonce="a21d8feb-b1a3-4aa5-af02-c612b985c31f">if(window.location.pathname!=="/"){window.history.replaceState(null,"","/"+window.location.search+window.location.hash);}</script><title>The Wedding of Nadila and Hanif</title><meta name="app-name" content="export_website"/><meta name="build-version" content="284b2b1a8de29498f78656d5e478468b146ce465"/><meta name="build-release-name" content="20261109-22-284b2b1"/><meta name="build-deployment-group" content="STABLE"/><meta name="viewport" content="width=device-width, initial-scale=1"><script nonce="a21d8feb-b1a3-4aa5-af02-c612b985c31f">(function pushPageBuildIdentityToNativeShell(identity) {
   if (typeof window === 'undefined') {
     return;
   }
@@ -684,8 +684,6 @@
   audio.addEventListener('ended', updateUI);
 
   function isUndanganView() {
-    const path = window.location.pathname.toLowerCase();
-    if (path.includes('undangan')) return true;
     const sections = document.querySelectorAll('section.rGeu6w');
     return sections.length > 1;
   }
@@ -697,7 +695,6 @@
       playPromise.then(() => {
         hasAutoPlayed = true;
         updateUI();
-        removeInteractionListeners();
       }).catch(() => {
         updateUI();
       });
@@ -707,9 +704,15 @@
   function syncInvitationMusicState() {
     if (isUndanganView()) {
       btn.classList.add('is-visible');
+      // Keep URL unified at root index "/"
+      if (window.location.pathname !== '/') {
+        window.history.replaceState(window.history.state, '', '/' + window.location.search);
+      }
       if (!hasAutoPlayed && !userManuallyPaused) {
         tryAutoPlay();
       }
+    } else {
+      btn.classList.remove('is-visible');
     }
   }
 
@@ -727,41 +730,39 @@
     }
   });
 
-  // Fallback interaction listeners if browser blocks initial autoplay on direct /undangan load
-  function onFirstUserInteraction(e) {
-    if (btn.contains(e.target)) return;
-    // Also detect clicking "Buka Undangan" on the cover page
-    const clickedText = (e.target && e.target.innerText) ? e.target.innerText.toLowerCase() : '';
-    const closestLink = e.target && e.target.closest ? e.target.closest('a, button, [role="button"]') : null;
-    const linkText = closestLink ? (closestLink.innerText || '').toLowerCase() : '';
+  function isBukaUndanganTarget(target) {
+    if (!target || !target.closest) return false;
+    const link = target.closest('a._3zDNwA, a[data-testid="link"], a[href*="undangan"], a[href*="#page-0"]');
+    if (link && !isUndanganView()) return true;
+    const box = target.closest('.DF_utQ');
+    if (box && (box.textContent || '').toLowerCase().includes('buka undangan')) return true;
+    const text = (target.textContent || target.innerText || '').toLowerCase();
+    return text.includes('buka undangan');
+  }
 
-    if (clickedText.includes('buka undangan') || linkText.includes('buka undangan')) {
-      btn.classList.add('is-visible');
+  // Detect clicking "Buka Undangan" synchronously inside user click gesture
+  window.addEventListener('click', function(e) {
+    if (btn.contains(e.target)) return;
+
+    if (isBukaUndanganTarget(e.target)) {
       userManuallyPaused = false;
+      btn.classList.add('is-visible');
       tryAutoPlay();
+      setTimeout(() => {
+        if (window.location.pathname !== '/') {
+          window.history.replaceState(window.history.state, '', '/' + window.location.search);
+        }
+        syncInvitationMusicState();
+      }, 60);
       return;
     }
 
     if (isUndanganView() && !hasAutoPlayed && !userManuallyPaused) {
       tryAutoPlay();
     }
-  }
+  }, true);
 
-  const interactionEvents = ['click', 'touchstart', 'keydown', 'scroll'];
-  function addInteractionListeners() {
-    interactionEvents.forEach(evt => {
-      window.addEventListener(evt, onFirstUserInteraction, { passive: true, capture: true });
-    });
-  }
-  function removeInteractionListeners() {
-    interactionEvents.forEach(evt => {
-      window.removeEventListener(evt, onFirstUserInteraction, { capture: true });
-    });
-  }
-
-  addInteractionListeners();
-
-  // Monitor SPA navigation / DOM updates (e.g. Cover -> Undangan)
+  // Monitor SPA navigation / DOM updates (Cover -> Undangan)
   window.addEventListener('popstate', () => setTimeout(syncInvitationMusicState, 100));
   const musicObserver = new MutationObserver(() => {
     syncInvitationMusicState();

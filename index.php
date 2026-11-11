@@ -135,6 +135,7 @@ if ($uri !== '/' && file_exists($filePath) && is_file($filePath)) {
         'm3u' => 'application/x-mpegURL',
         'm3u8' => 'application/x-mpegURL',
         'mp4' => 'video/mp4',
+        'mp3' => 'audio/mpeg',
         'png' => 'image/png',
         'jpg' => 'image/jpeg',
         'jpeg' => 'image/jpeg',
@@ -157,10 +158,6 @@ if (strpos($uri, '/_assets/') !== false || preg_match('/\.(js|css|png|jpe?g|gif|
     exit;
 }
 
-// 5. Default SPA fallback: render index.html for /, /undangan, /page-2, etc.
+// 5. Default SPA fallback: render index.html for all routes
 header('Content-Type: text/html; charset=utf-8');
-if (strpos($uri, '/undangan') === 0 && file_exists(__DIR__ . '/undangan.html')) {
-    readfile(__DIR__ . '/undangan.html');
-    exit;
-}
 readfile(__DIR__ . '/index.html');
